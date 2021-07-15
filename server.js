@@ -53,3 +53,17 @@ Cocktails.find({},(error,data)=>{
     else{res.send(data)}
 })
 }
+
+// http://localhost:3008/deleteFromDrinksMenu/:id
+server.delete("/deleteFromDrinksMenu/:id",handleDeleteFromFavorite)
+
+function handleDeleteFromFavorite (req,res){
+  const { id } = req.params;
+  Cocktails.findOneAndDelete({_id:id},(error,data)=>{
+    if(error){console.log(error);}
+    else{Cocktails.find({},(error,data)=>{
+      if(error){console.log(error);}
+      else{res.send(data)}
+    })}
+  })
+}
