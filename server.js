@@ -16,8 +16,9 @@ http: server.get("/", (req, res) => res.send("Hello World!"));
 server.get("/drinksMenu", handleDrinksMenu);
 
 server.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
-
 // mongodb server
+//password : FvFxZGTABcce8tKQ
+//database : cocktails
 const mongoose = require("mongoose");
 mongoose.connect(
   "mongodb://Abdalrhman:FvFxZGTABcce8tKQ@cluster0-shard-00-00.vl5kc.mongodb.net:27017,cluster0-shard-00-01.vl5kc.mongodb.net:27017,cluster0-shard-00-02.vl5kc.mongodb.net:27017/cocktails?ssl=true&replicaSet=atlas-nz8xav-shard-0&authSource=admin&retryWrites=true&w=majority",
@@ -74,6 +75,31 @@ function handleDeleteFromFavorite(req, res) {
         } else {
           res.send(data);
         }
+      });
+    }
+  });
+}
+
+// updateDrinksMenu
+
+server.put("/updateDrinksMenu", handleUpdateFavorites);
+
+function handleUpdateFavorites(req, res) {
+  const { drink, img, id } = req.body;
+  Cocktails.findOne({ _id: id }, (error, data) => {
+    if (error) {
+      console.log(error);
+    } else {
+      data.drink = drink;
+      data.img = img;
+      data.save().then(() => {
+        Cocktails.find({}, (error, data) => {
+          if (error) {
+            console.log(error);
+          } else {
+            res.send(data);
+          }
+        });
       });
     }
   });
